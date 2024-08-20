@@ -43,7 +43,7 @@ class Renderer:
         if not self.alpha:
             return rgb
 
-        alpha = np.ones_like(monoRender, np.uint8) * 255
+        alpha = np.zeros_like(monoRender, np.uint8) 
         return np.concatenate((rgb, alpha), -1)
 
 
