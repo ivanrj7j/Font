@@ -1,6 +1,7 @@
 from Font.config import FontConfig
 import numpy as np
 from Font.character import Character
+import cv2
 
 class Renderer:
     """
@@ -61,6 +62,31 @@ class Renderer:
 
         return canvas
 
+    def overlay(self, background:np.ndarray, foreground:np.ndarray, org:tuple[int, int]=(0, 0)):
+        """
+        Overlays the foregraound and the background image
+
+        Parameters:
+        - background (np.ndarray): The background image as a numpy array.(RGBA)
+        - foreground (np.ndarray): The foreground image as a numpy array.(RGBA)
+        - org (tuple[int, int]): The origin coordinates (top left) where the foreground image should be overlayed on the background image.
+        """
+        assert background.shape[-1] == foreground.shape[-1]  == 4, "Image should be RGBA"
+        x, y = org
+        x1, y1 =  x+foreground.shape[1], y+foreground.shape[0]
+
+        img = background.copy()
+        foreground = foreground.copy()
+
+        mask = cv2.bitwise_not(foreground[:, :, -1])
+        overlay = img[y:y1, x:x1]
+        overlay = cv2.bitwise_and(overlay, overlay, mask=mask)
+        overlay = cv2.add(overlay, foreground)
+
+        img[y:y1, x:x1] = overlay
+
+        return img
+
     def render(self, text:str) -> np.ndarray:
         """
         Renders the input text using the custom font specified in the configuration.
@@ -74,20 +100,18 @@ class Renderer:
         monoRender = self.renderMono(text)
         monoRender = np.expand_dims(monoRender, -1)
 
-        channels = 4 if self.alpha else 3
-
-        render = np.tile(monoRender, channels)
-        backbox = self.config.backBox
+        render = np.tile(monoRender, 3)
 
         if self.alpha:
-            render = render * (*self.config.color, 255)
-            backbox = (*backbox, 255)
-        else:
-            render = render * self.config.color
+            alphaChannels = monoRender * 255
+            render = np.concatenate((render, alphaChannels), -1)  # adding alpha channel to the render
+        
+        render[:, :, :3] = render[:, :, :3] * self.config.color
 
-        if sum(backbox[:3]) > 0:
-            backbox = np.ones_like(render) * backbox
-            render = backbox + render
+        if self.config.backBox is not None and self.alpha:
+            backBox = (*self.config.backBox, 255)
+            backBox = np.ones_like(render) * backBox
+            return self.overlay(backBox.astype(np.uint8), render.astype(np.uint8), (0, 0))
         
         render = render.astype(np.uint8)
         return render
