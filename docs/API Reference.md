@@ -19,7 +19,6 @@
     * [renderMono](#render.Renderer.renderMono)
     * [calculateSpace](#render.Renderer.calculateSpace)
     * [calculateDimension](#render.Renderer.calculateDimension)
-* [\_\_init\_\_](#__init__)
 
 <a id="character"></a>
 
@@ -325,8 +324,3 @@ Calculates the dimensions of the rendered text based on the specified configurat
 **Returns**:
 
   - Tuple[int, int]: A tuple containing the total width and total height of the rendered text.
-
-<a id="__init__"></a>
-
-# \_\_init\_\_
-
