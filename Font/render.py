@@ -7,23 +7,19 @@ class Renderer:
     Used to handle rendering text using custom font for cv2
     """
 
-    def __init__(self, config: FontConfig, alpha: bool = True, space:int=1, wordSpace:int=4) -> None:
+    def __init__(self, config: FontConfig, alpha: bool = True) -> None:
         """
         Initialize the Renderer object with a custom font configuration and an optional alpha channel.
 
         Parameters:
         - config (FontConfig): An instance of the FontConfig class containing the custom font to be used for rendering text.
         - alpha (bool, optional): A boolean value indicating whether the rendered text should have an alpha channel. Default is True.
-        - space (int, optional): The spacing between characters. Default is 1.
-        - wordSpace (int, optional): The spacing between words. Default is 4.
         """
         self.config = config
         self.face = config.createFace()
         self.alpha = alpha
-        self.space = space
-        self.wordSpace = wordSpace
 
-    def renderMono(self, text: str) -> np.ndarray:
+    def renderMonoLine(self, text: str) -> np.ndarray:
         """
         Renders the input text using the custom font specified in the FontConfig object.
         
@@ -86,13 +82,47 @@ class Renderer:
         
         render = render.astype(np.uint8)
         return render
+    def calculateAnchorPoint(self, width:int, totalWidth:int):
+        if self.config.align == "right":
+            return totalWidth - width
+        if self.config.align == "center":
+            return (totalWidth-width )// 2
+        return 0
+    
+    def renderMono(self, text:str):
+        if "\n" not in text:
+            return self.renderMonoLine(text)
+        
+        heights = []
+        totalWidth = 0
+        renders = []
+        for line in text.split("\n"):
+            render = self.renderMonoLine(line)
+            heights.append(render.shape[0])
+            totalWidth = max(totalWidth, render.shape[1])
+            renders.append(render)
+        totalHeight = sum(heights)
+        
+        canvas = np.zeros((totalHeight, totalWidth), dtype=np.uint8)
+
+        for i in range(len(renders)):
+            w = renders[i].shape[1]
+            x = self.calculateAnchorPoint(w, totalWidth)
+
+            h = heights[i]
+            y = sum(heights[:i])
+            # calculating dimensions 
+
+            canvas[y:y+h, x:x+w] = renders[i]
+
+        return canvas
     
     def calculateSpace(self, char:str):
-        space = self.space
+        space = self.config.spacing
         if char == " ":
-            space = self.wordSpace
+            space = self.config.wordSpacing
         if char == "\t":
-            space = self.wordSpace*4
+            space = self.config.wordSpacing*4
 
         return space
     
