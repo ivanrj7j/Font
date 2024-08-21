@@ -30,8 +30,9 @@ class Character:
             char = np.zeros((1, self.space))
             return char, (self.space, 1), (topShift, descent)
 
-        charSpace = np.zeros((height, self.space))
-        char = np.hstack((char, charSpace))
+        if self.space > 0:
+            charSpace = np.zeros((height, self.space))
+            char = np.hstack((char, charSpace))
 
         height, width = char.shape
 
