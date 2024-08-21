@@ -1,7 +1,7 @@
 from freetype import Face
 
 class FontConfig:
-    def __init__(self, fontPath:str, fontSize:int, color:tuple[int, int, int], spacing:int=1, wordSpacing:int=3) -> None:
+    def __init__(self, fontPath:str, fontSize:int, color:tuple[int, int, int], spacing:int=1, wordSpacing:int=3, backBox:tuple=[0, 0, 0]) -> None:
         """
         Initialize a FontConfig object with the given parameters.
 
@@ -11,6 +11,7 @@ class FontConfig:
         color (tuple[int, int, int]): The color of the font as a tuple of RGB values (0-255).
         spacing (int, optional): The spacing between characters. Default is 1.
         wordSpacing (int, optional): The spacing between words. Default is 3.
+        backBox (tuple[int, int, int], optional): The background color of the font as a tuple of RGB values (0-255). Default is [0, 0, 0].
 
         Returns:
         None
@@ -20,6 +21,7 @@ class FontConfig:
         self.spacing = spacing
         self.wordSpacing = wordSpacing
         self.color = color
+        self.backBox = backBox
 
     def createFace(self) -> Face:
         """

@@ -72,11 +72,17 @@ class Renderer:
         channels = 4 if self.alpha else 3
 
         render = np.tile(monoRender, channels)
+        backbox = self.config.backBox
 
         if self.alpha:
             render = render * (*self.config.color, 255)
+            backbox = (*backbox, 255)
         else:
             render = render * self.config.color
+
+        if sum(backbox[:3]) > 0:
+            backbox = np.ones_like(render) * backbox
+            render = backbox + render
         
         render = render.astype(np.uint8)
         return render
