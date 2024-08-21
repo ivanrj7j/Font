@@ -1,6 +1,9 @@
 from freetype import Face
 
 class FontConfig:
+    """
+    Used as configuration for Renderer class.
+    """
     def __init__(self, fontPath:str, fontSize:int, color:tuple[int, int, int], spacing:int=1, wordSpacing:int=3, backBox:tuple=[0, 0, 0], align:str="left") -> None:
         """
         Initialize a FontConfig object with the given parameters.
