@@ -18,7 +18,7 @@ This library provides a simple and efficient solution to this problem by allowin
 To use the `Font` library in your project, follow these steps:
 
 ```
-$ pip install Font==0.1
+$ pip install Font
 ```
 
 or
