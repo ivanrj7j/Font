@@ -1,25 +1,3 @@
-# Table of Contents
-
-* [character](#character)
-  * [Character](#character.Character)
-    * [\_\_init\_\_](#character.Character.__init__)
-    * [getBitmap](#character.Character.getBitmap)
-    * [getCharacter](#character.Character.getCharacter)
-    * [calculateDimension](#character.Character.calculateDimension)
-* [config](#config)
-  * [FontConfig](#config.FontConfig)
-    * [\_\_init\_\_](#config.FontConfig.__init__)
-    * [createFace](#config.FontConfig.createFace)
-* [render](#render)
-  * [Renderer](#render.Renderer)
-    * [\_\_init\_\_](#render.Renderer.__init__)
-    * [renderMonoLine](#render.Renderer.renderMonoLine)
-    * [render](#render.Renderer.render)
-    * [calculateAnchorPoint](#render.Renderer.calculateAnchorPoint)
-    * [renderMono](#render.Renderer.renderMono)
-    * [calculateSpace](#render.Renderer.calculateSpace)
-    * [calculateDimension](#render.Renderer.calculateDimension)
-
 <a id="character"></a>
 
 # character
@@ -144,7 +122,8 @@ def __init__(fontPath: str,
              color: tuple[int, int, int],
              spacing: int = 1,
              wordSpacing: int = 3,
-             backBox: tuple = [0, 0, 0],
+             lineSpacing: int = 2,
+             backBox: tuple = None,
              align: str = "left") -> None
 ```
 
@@ -157,7 +136,8 @@ Initialize a FontConfig object with the given parameters.
 - `color` _tuple[int, int, int]_ - The color of the font as a tuple of RGB values (0-255).
 - `spacing` _int, optional_ - The spacing between characters. Default is 1.
 - `wordSpacing` _int, optional_ - The spacing between words. Default is 3.
-- `backBox` _tuple[int, int, int], optional_ - The background color of the font as a tuple of RGB values (0-255). Default is [0, 0, 0].
+- `lineSpacing` _int, optional_ - The spacing between lines. Default is 2.
+- `backBox` _tuple[int, int, int], optional_ - The background color of the font as a tuple of RGB values (0-255). Default is None (ie no back box).
 - `align` _str, optional_ - The alignment of the text. Can be "left", "center", or "right". Default is "left". This is not case sensitive.
   
 
@@ -174,6 +154,49 @@ def createFace() -> Face
 ```
 
 Createss a FreeType face based on the given parameters.
+
+<a id="funcs"></a>
+
+# funcs
+
+<a id="funcs.putTTFText"></a>
+
+#### putTTFText
+
+```python
+def putTTFText(img: np.ndarray,
+               text: str,
+               org: tuple[int, int],
+               fontFace: str,
+               fontSclae: int,
+               color: tuple[int, int, int] = (255, 255, 255),
+               spacing: int = 1,
+               wordSpacing: int = 3,
+               lineSpacing: int = 2,
+               backBox: tuple = None,
+               align: str = "left")
+```
+
+This function overlays a given text onto an image using TrueType fonts.
+
+**Arguments**:
+
+- `img` _np.ndarray_ - The input image on which the text will be overlayed.
+- `text` _str_ - The text to be rendered.
+- `org` _tuple[int, int]_ - The origin (x, y) coordinates of the text's top-left corner on the image.
+- `fontFace` _str_ - The path to the TrueType font file.
+- `fontSclae` _int_ - The size of the font in pixels.
+- `color` _tuple[int, int, int], optional_ - The color of the text in RGB format. Default is white (255, 255, 255).
+- `spacing` _int, optional_ - The spacing between characters in pixels. Default is 1.
+- `wordSpacing` _int, optional_ - The spacing between words in pixels. Default is 3.
+- `lineSpacing` _int, optional_ - The spacing between lines in pixels. Default is 2.
+- `backBox` _tuple, optional_ - The dimensions (width, height) of the background box for the text. Default is None.
+- `align` _str, optional_ - The alignment of the text. Can be "left", "center", or "right". Default is "left".
+  
+
+**Returns**:
+
+- `np.ndarray` - The image with the rendered text overlayed.
 
 <a id="render"></a>
 
@@ -222,6 +245,24 @@ Renders the input text using the custom font specified in the FontConfig object.
 **Returns**:
 
   - np.ndarray: A numpy array containing the rendered text using the custom font.
+
+<a id="render.Renderer.overlay"></a>
+
+#### overlay
+
+```python
+def overlay(background: np.ndarray,
+            foreground: np.ndarray,
+            org: tuple[int, int] = (0, 0))
+```
+
+Overlays the foregraound and the background image
+
+**Arguments**:
+
+  - background (np.ndarray): The background image as a numpy array.(RGBA)
+  - foreground (np.ndarray): The foreground image as a numpy array.(RGBA)
+  - org (tuple[int, int]): The origin coordinates (top left) where the foreground image should be overlayed on the background image.
 
 <a id="render.Renderer.render"></a>
 
