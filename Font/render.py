@@ -72,11 +72,12 @@ class Renderer:
         - org (tuple[int, int]): The origin coordinates (top left) where the foreground image should be overlayed on the background image.
         """
         assert background.shape[-1] == foreground.shape[-1]  == 4, "Image should be RGBA"
+
         x, y = org
-        x1, y1 =  x+foreground.shape[1], y+foreground.shape[0]
+        x1, y1 =  min(x+foreground.shape[1], background.shape[1]), min(y+foreground.shape[0], background.shape[0])
 
         img = background.copy()
-        foreground = foreground.copy()
+        foreground = foreground.copy()[:y1-y, :x1-x]
 
         mask = cv2.bitwise_not(foreground[:, :, -1])
         overlay = img[y:y1, x:x1]
@@ -158,7 +159,7 @@ class Renderer:
             heights.append(render.shape[0])
             totalWidth = max(totalWidth, render.shape[1])
             renders.append(render)
-            
+
         totalHeight = sum(heights)+(len(heights) * self.config.lineSpacing)
         
         canvas = np.zeros((totalHeight, totalWidth), dtype=np.uint8)
