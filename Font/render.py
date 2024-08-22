@@ -158,16 +158,17 @@ class Renderer:
             heights.append(render.shape[0])
             totalWidth = max(totalWidth, render.shape[1])
             renders.append(render)
-        totalHeight = sum(heights)
+            
+        totalHeight = sum(heights)+(len(heights) * self.config.lineSpacing)
         
         canvas = np.zeros((totalHeight, totalWidth), dtype=np.uint8)
 
         for i in range(len(renders)):
             w = renders[i].shape[1]
             x = self.calculateAnchorPoint(w, totalWidth)
-
+            top = self.config.lineSpacing if i > 0 else 0
             h = heights[i]
-            y = sum(heights[:i])
+            y = sum(heights[:i])+top
             # calculating dimensions 
 
             canvas[y:y+h, x:x+w] = renders[i]
