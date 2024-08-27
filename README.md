@@ -50,4 +50,4 @@ For detailed information about the available classes and methods, please refer t
 Contributions to the `Font` library are welcome! If you find any issues or have suggestions for improvements, please feel free to submit a pull request or open an issue on the [GitHub repository](https://github.com/ivanrj7j/Font).
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+Click [here](LICENSE) to see the license
