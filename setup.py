@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name='Font',
-    version='1.1',
+    version='1.1.1',
     packages=find_packages(),
     install_requires=required,
     description='A custom text rendering library using custom fonts for opencv',
