@@ -133,7 +133,7 @@ renderedImage = putTTFText(image, "Hello world!\nI'm rendering text!", (0, 0), "
 
 ![With Backbox](render6.png)
 
-### Code Explaination
+#### Code Explaination
 
 `align` keyword argument specifies the alignment of the text. This is case insensitive. Also the default value is `left`. As you can see in the second example, when `align="hello"` the text is still aligned at left, this is because left is the default argument and if the `align` keyword argument is invalid, it defaults to `left`.
 
@@ -152,3 +152,21 @@ renderedImage = putTTFText(image, "Hello world!\nI'm rendering text!", (0, 0), "
 ```
 
 ![With Backbox center](render9.png)
+
+## Additional
+
+If you are using backboxes, you may want to set `applyMask=False` this helps with performance a little bit by skipping on some unnecessary calculations.
+
+### Difference
+
+`applyMask=False`
+```
+249 ms ± 3.79 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
+
+`applyMask=True`
+```
+260 ms ± 5.53 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+```
+
+###### This was tested with `%%timeit` in jupyter notebook. Results may vary device to device.

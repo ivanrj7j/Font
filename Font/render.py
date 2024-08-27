@@ -62,7 +62,7 @@ class Renderer:
 
         return canvas
 
-    def overlay(self, background:np.ndarray, foreground:np.ndarray, org:tuple[int, int]=(0, 0)):
+    def overlay(self, background:np.ndarray, foreground:np.ndarray, org:tuple[int, int]=(0, 0), applyMask:bool=True):
         """
         Overlays the foregraound and the background image
 
@@ -70,8 +70,10 @@ class Renderer:
         - background (np.ndarray): The background image as a numpy array.(RGBA)
         - foreground (np.ndarray): The foreground image as a numpy array.(RGBA)
         - org (tuple[int, int]): The origin coordinates (top left) where the foreground image should be overlayed on the background image.
+        - applyMask (bool, optional): A boolean value indicating whether to apply a mask to the foreground image. Default is True.
         """
-        assert background.shape[-1] == foreground.shape[-1]  == 4, "Image should be RGBA"
+        assert background.shape[-1] == foreground.shape[-1], "Foreground and Background Images must have same shape"
+        assert background.shape[-1] != 3 or (background.shape[-1] != 4 and applyMask), "Image should Either be RGB without applyMask or RGBA with applyMask"
 
         x, y = org
         x1, y1 =  min(x+foreground.shape[1], background.shape[1]), min(y+foreground.shape[0], background.shape[0])
@@ -79,12 +81,17 @@ class Renderer:
         img = background.copy()
         foreground = foreground.copy()[:y1-y, :x1-x]
 
-        mask = cv2.bitwise_not(foreground[:, :, -1])
-        overlay = img[y:y1, x:x1]
-        overlay = cv2.bitwise_and(overlay, overlay, mask=mask)
-        overlay = cv2.add(overlay, foreground)
+        if applyMask:
+            mask = cv2.bitwise_not(foreground[:, :, -1])
+            overlay = img[y:y1, x:x1]
+            overlay = cv2.bitwise_and(overlay, overlay, mask=mask)
+            overlay = cv2.add(overlay, foreground)
 
-        img[y:y1, x:x1] = overlay
+            img[y:y1, x:x1] = overlay
+
+            return img
+        
+        img[y:y1, x:x1] = foreground
 
         return img
 

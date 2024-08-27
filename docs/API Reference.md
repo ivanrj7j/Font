@@ -174,7 +174,8 @@ def putTTFText(img: np.ndarray,
                wordSpacing: int = 3,
                lineSpacing: int = 2,
                backBox: tuple = None,
-               align: str = "left")
+               align: str = "left",
+               applyMask: bool = True)
 ```
 
 This function overlays a given text onto an image using TrueType fonts.
@@ -192,6 +193,7 @@ This function overlays a given text onto an image using TrueType fonts.
 - `lineSpacing` _int, optional_ - The spacing between lines in pixels. Default is 2.
 - `backBox` _tuple, optional_ - The dimensions (width, height) of the background box for the text. Default is None.
 - `align` _str, optional_ - The alignment of the text. Can be "left", "center", or "right". Default is "left".
+- `applyMask` _bool, optional_ - Whether to apply a mask to the rendered text. Default is True.
   
 
 **Returns**:
@@ -253,7 +255,8 @@ Renders the input text using the custom font specified in the FontConfig object.
 ```python
 def overlay(background: np.ndarray,
             foreground: np.ndarray,
-            org: tuple[int, int] = (0, 0))
+            org: tuple[int, int] = (0, 0),
+            applyMask: bool = True)
 ```
 
 Overlays the foregraound and the background image
@@ -263,6 +266,7 @@ Overlays the foregraound and the background image
   - background (np.ndarray): The background image as a numpy array.(RGBA)
   - foreground (np.ndarray): The foreground image as a numpy array.(RGBA)
   - org (tuple[int, int]): The origin coordinates (top left) where the foreground image should be overlayed on the background image.
+  - applyMask (bool, optional): A boolean value indicating whether to apply a mask to the foreground image. Default is True.
 
 <a id="render.Renderer.render"></a>
 
